@@ -1,10 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, useColorScheme } from 'react-native';
-import { ThemeProvider, Button } from 'react-native-elements';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { customLight, customDark } from './src/themes'
-import Navigator from './src/screens';
+import { StyleSheet, useColorScheme } from 'react-native';
+import { ThemeProvider } from 'react-native-elements';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StoreProvider } from 'easy-peasy';
+
+import { customLight, customDark } from './src/themes';
+import { store } from './src/store';
+import AppWrapper from './src/AppWrapper';
+
 
 export default function App() {
   const themeName = useColorScheme()
@@ -12,14 +15,9 @@ export default function App() {
   return (
     <ThemeProvider theme={themeName === 'dark' ? customDark : customLight} useDark={themeName === 'dark'}>
       <SafeAreaProvider>
-        <StatusBar style="auto" />
-        {/* <View style={styles.container}>
-          <Text>Open up App.tsx to start working on your app!</Text>
-          <Button 
-            title="Test Theme"
-          />
-        </View> */}
-        <Navigator />
+        <StoreProvider store={store}>
+          <AppWrapper />
+        </StoreProvider>
       </SafeAreaProvider>
     </ThemeProvider>
   );

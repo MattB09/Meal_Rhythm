@@ -3,6 +3,9 @@ import { StyleSheet } from 'react-native';
 import { Tab, Text, TabView, useTheme } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import TimerScreen from './timer'
+import DashboardScreen from './dashboard';
+
 
 export default function Navigator() {
   const [index, setIndex] = useState<number>(0);
@@ -23,23 +26,21 @@ export default function Navigator() {
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors?.white }}>
 
       <TabView value={index} onChange={setIndex} animationType='spring'>
-
         <TabView.Item style={{ width: "100%" }}>
-            <Text h1 style={styles.header}>Timer</Text>
+          <TimerScreen />
         </TabView.Item>
 
         <TabView.Item style={{ width: "100%" }}>
-            <Text h1 style={styles.header}>Plans</Text>
+          <Text h1 style={styles.header}>Plans</Text>
         </TabView.Item>
 
         <TabView.Item style={{ width: "100%" }}>
-            <Text h1 style={styles.header}>Weight</Text>
+          <Text h1 style={styles.header}>Weight</Text>
         </TabView.Item>
 
         <TabView.Item style={{ width: "100%" }}>
-            <Text h1 style={styles.header}>Dashboard</Text>
+          <DashboardScreen />
         </TabView.Item>
-
       </TabView>
 
       <Tab
@@ -51,7 +52,6 @@ export default function Navigator() {
         }}
         variant="primary"
       >
-
         <Tab.Item 
           title='Timer'
           titleStyle={tabTitleStyles}
@@ -79,7 +79,6 @@ export default function Navigator() {
           containerStyle={tabContainerStyles}
           icon={{ name: 'poll', type: 'material-community'}}
         />
-
       </Tab>
 
     </SafeAreaView>
