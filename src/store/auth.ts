@@ -47,6 +47,7 @@ export const auth: Auth = {
   }),
   signIn: thunk(async (actions, payload) => {
     try {
+      actions.setSignInError(null)
       actions.setWasChecked(false);
       await signInWithEmailAndPassword(fbAuth, payload.email, payload.password);
     } catch (err) {
@@ -62,6 +63,7 @@ export const auth: Auth = {
   }),
   signUp: thunk(async (actions, payload) => {
     try {
+      actions.setSignUpError(null)
       actions.setWasChecked(false);
       await createUserWithEmailAndPassword(fbAuth, payload.email, payload.password);
     } catch (err) {
