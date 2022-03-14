@@ -31,7 +31,7 @@ export default function AppWrapper() {
   if (!wasChecked) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors?.white, justifyContent: 'center', alignItems: 'center' }}>
-        <LinearProgress style={{marginHorizontal: 8}}/>
+        <LinearProgress style={{marginHorizontal: 16, height: 24}}/>
       </SafeAreaView>
     )
   }
