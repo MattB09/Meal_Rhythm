@@ -6,23 +6,23 @@ import type { User } from 'firebase/auth';
 import { auth as fbAuth } from '../firebase';
 
 
-export interface Auth {
+export interface AuthStore {
   wasChecked: boolean;
   user: null|User;
   signInError: null|string;
   signUpError: null|string;
-  setUser: Action<Auth, null|User>;
-  setWasChecked: Action<Auth, boolean>;
-  setSignInError: Action<Auth, null|string>;
-  setSignUpError: Action<Auth, null|string>;
-  handleAuthChange: Action<Auth, null|User>;
-  signIn: Thunk<Auth, {email: string, password: string}>;
-  signUp: Thunk<Auth, {email: string, password: string}>;
-  signOut: Thunk<Auth, null>;
+  setUser: Action<AuthStore, null|User>;
+  setWasChecked: Action<AuthStore, boolean>;
+  setSignInError: Action<AuthStore, null|string>;
+  setSignUpError: Action<AuthStore, null|string>;
+  handleAuthChange: Action<AuthStore, null|User>;
+  signIn: Thunk<AuthStore, {email: string, password: string}>;
+  signUp: Thunk<AuthStore, {email: string, password: string}>;
+  signOut: Thunk<AuthStore, null>;
 }
 
 
-export const auth: Auth = {
+export const auth: AuthStore = {
   // store
   wasChecked: false,
   user: null,
@@ -50,7 +50,7 @@ export const auth: Auth = {
       actions.setSignInError(null)
       actions.setWasChecked(false);
       await signInWithEmailAndPassword(fbAuth, payload.email, payload.password);
-    } catch (err) {
+    } catch (err: any) {
       console.log("error", err, err?.code);
       if (err.code === "auth/too-many-requests") {
         actions.setSignInError("Too many failed attempts. Try again later")
@@ -66,7 +66,7 @@ export const auth: Auth = {
       actions.setSignUpError(null)
       actions.setWasChecked(false);
       await createUserWithEmailAndPassword(fbAuth, payload.email, payload.password);
-    } catch (err) {
+    } catch (err: any) {
       console.log("error", err, err?.code);
       if (err.code == "auth/email-already-in-use") {
         actions.setSignUpError("User already exists...")

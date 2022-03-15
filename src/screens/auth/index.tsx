@@ -59,10 +59,6 @@ export default function AuthScreen() {
     setConfirmError("");
   }
 
-  function handleSignUp() {
-    console.log("todo");
-  }
-
   function toggleVisible() {
     setPasswordVisible((prev) => !prev);
   }

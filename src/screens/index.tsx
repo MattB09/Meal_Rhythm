@@ -4,6 +4,7 @@ import { Tab, Text, TabView, useTheme } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import TimerScreen from './timer'
+import WeightScreen from './weight'
 import DashboardScreen from './dashboard';
 
 
@@ -35,7 +36,7 @@ export default function Navigator() {
         </TabView.Item>
 
         <TabView.Item style={{ width: "100%" }}>
-          <Text h1 style={styles.header}>Weight</Text>
+          <WeightScreen />
         </TabView.Item>
 
         <TabView.Item style={{ width: "100%" }}>

@@ -1,16 +1,20 @@
 import { createStore, createTypedHooks } from 'easy-peasy';
 
 import { auth } from './auth';
-import type { Auth } from './auth';
+import { weight } from './weight'
+import type { AuthStore } from './auth';
+import type { WeightStore } from './weight'
 
 
 interface StoreModel {
-  auth: Auth
+  auth: AuthStore,
+  weight: WeightStore
 }
 
 
 export const store = createStore<StoreModel>({
-  auth: auth
+  auth,
+  weight
 })
 
 
