@@ -9,8 +9,8 @@ const shared = {
 export const customLight = {
   ...shared,
   colors: {
-    primary: "#31589B",
-    secondary: "#63A375"
+    primary: "#83A2D8",
+    secondary: "#7EB48E"
   },
   mode: 'light'
 };
@@ -22,7 +22,7 @@ export const customDark = {
   },
   colors: {
     primary: "#31589B",
-    secondary: "#63A375"
+    secondary: "#5B9A6D"
   },
   mode: 'dark'
 };
