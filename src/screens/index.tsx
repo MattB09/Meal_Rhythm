@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { GestureResponderEvent, StyleSheet } from 'react-native';
 import { Tab, Text, TabView, useTheme } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -26,20 +26,32 @@ export default function Navigator() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors?.white }}>
 
-      <TabView value={index} onChange={setIndex} animationType='spring'>
-        <TabView.Item style={{ width: "100%" }}>
+      <TabView value={index} onChange={setIndex}>
+        <TabView.Item 
+        style={{ flex: 1 }}
+        onMoveShouldSetResponder={(e: any) => e.stopPropagation()}
+      >
           <TimerScreen />
         </TabView.Item>
 
-        <TabView.Item style={{ width: "100%" }}>
+        <TabView.Item 
+          style={{ flex: 1 }}
+          onMoveShouldSetResponder={(e: any) => e.stopPropagation()}
+        >
           <Text h1 style={styles.header}>Plans</Text>
         </TabView.Item>
 
-        <TabView.Item style={{ width: "100%" }}>
+        <TabView.Item 
+          style={{ flex: 1  }}
+          onMoveShouldSetResponder={(e: any) => e.stopPropagation()}
+        >
           <WeightScreen />
         </TabView.Item>
 
-        <TabView.Item style={{ width: "100%" }}>
+        <TabView.Item 
+          style={{ flex: 1 }}
+          onMoveShouldSetResponder={(e: any) => e.stopPropagation()}
+        >
           <DashboardScreen />
         </TabView.Item>
       </TabView>

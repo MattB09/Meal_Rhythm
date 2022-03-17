@@ -14,8 +14,7 @@ export default function WeightListItem({item}:WeightListItemProps) {
 
   return (
     <ListItem 
-      bottomDivider 
-      containerStyle={{backgroundColor: theme.colors?.grey5, borderRadius: 10, marginBottom: 8}}>
+      containerStyle={{backgroundColor: theme.colors?.grey5, borderRadius: 10, marginBottom: 8, width: "100%"}}>
       <ListItem.Content>
         <ListItem.Title><Text>{item.weight}</Text></ListItem.Title>
         <ListItem.Subtitle>{item.date.toLocaleDateString()}</ListItem.Subtitle>
