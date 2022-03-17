@@ -1,15 +1,17 @@
-import { ListItem, Text, useTheme, Button } from 'react-native-elements';
+import { ListItem, Text, useTheme } from 'react-native-elements';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import type { Weight } from '../../store/weight';
 
 
 type WeightListItemProps = {
-  item: Weight
+  item: Weight,
+  index: number,
+  setItem: (ind:number) => void,
 }
 
 
-export default function WeightListItem({item}:WeightListItemProps) {
+export default function WeightListItem({item, index, setItem}:WeightListItemProps) {
   const { theme } = useTheme();
 
   return (
@@ -20,7 +22,7 @@ export default function WeightListItem({item}:WeightListItemProps) {
         <ListItem.Subtitle>{item.date.toLocaleDateString()}</ListItem.Subtitle>
         { item.note && <ListItem.Subtitle><Text>{item.note}</Text></ListItem.Subtitle>}
       </ListItem.Content>
-      <Icon name="pencil-circle" size={30} color={theme.colors?.grey2} />
+      <Icon name="pencil-circle" size={30} color={theme.colors?.grey2} onPress={()=> setItem(index)} />
     </ListItem>
   )
 }

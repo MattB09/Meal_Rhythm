@@ -6,17 +6,21 @@ import { View, KeyboardAvoidingView, Platform, Modal, TouchableWithoutFeedback, 
 import { useStoreActions, useStoreState } from '../../store';
 import type { Weight } from '../../store/weight';
 
+type editWeightModalProps = {
+  visible: boolean,
+  closeFunc: () => void, 
+  item: Weight
+}
 
-
-export default function AddWeightModal({visible, closeFunc}:any) {
+export default function EditWeightModal({visible, closeFunc, item}:editWeightModalProps) {
   const user = useStoreState((state) => state.auth.user)
   const saveWeight = useStoreActions((actions) => actions.weight.saveWeight)
 
   const { theme } = useTheme();
 
-  const [weight, setWeight] = useState<string>("")
+  const [weight, setWeight] = useState<string>(item.weight ? item.weight.toString() : "")
   const [weightError, setWeightError] = useState<string>("")
-  const [note, setNote] = useState<string>("")
+  const [note, setNote] = useState<string>(item.note || "")
 
   function handleUpdateWeight(text: string) {
     setWeight(text)
@@ -34,16 +38,15 @@ export default function AddWeightModal({visible, closeFunc}:any) {
   function handleSaveWeight() {
     if (weight === "" || weightError) return
     let actualNote = (note === "") ? null : note
-    let d = new Date()
     saveWeight({
       uid: user!.uid, 
       weight: {
-        id: d.toUTCString(),
-        date: d,
+        id: item.id,
+        date: item.date,
         weight: Number(weight),
         note: actualNote
       },
-      type: 'save'
+      type: 'edit'
     });
     handleClose()
   }
@@ -72,7 +75,7 @@ export default function AddWeightModal({visible, closeFunc}:any) {
         accessible={false}
       >
         <View style={{ width: '90%', backgroundColor: theme.colors?.primary, padding: 16, borderRadius:30 }}>
-          <Text h3 style={{color: theme.colors?.black, textAlign: 'center', marginBottom: 8}}>Log your weight</Text>
+          <Text h3 style={{color: theme.colors?.black, textAlign: 'center', marginBottom: 8}}>Edit</Text>
           <Input 
             style={{color: theme.colors?.black}}
             label="Weight (kg)"
@@ -80,6 +83,7 @@ export default function AddWeightModal({visible, closeFunc}:any) {
             errorMessage={weightError}
             renderErrorMessage={weightError !== ""}
             onChangeText={(text) => handleUpdateWeight(text)}
+            value={weight}
           />
           <Input 
             style={{color: theme.colors?.black}}
@@ -88,6 +92,7 @@ export default function AddWeightModal({visible, closeFunc}:any) {
             multiline
             numberOfLines={2}
             onChangeText={(text) => setNote(text)}
+            value={note}
           />
           
           <Button

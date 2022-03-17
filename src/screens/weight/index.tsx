@@ -4,8 +4,9 @@ import { View, FlatList } from 'react-native';
 
 import { useStoreActions, useStoreState } from '../../store';
 import WeightListItem from './WeightListItem';
-import type { Weight } from '../../store/weight';
+import { weight, Weight } from '../../store/weight';
 import AddWeightModal from './AddWeightModal';
+import EditWeightModal from './EditWeightModal'
 
 
 export default function WeightScreen() {
@@ -19,6 +20,8 @@ export default function WeightScreen() {
 
   const [weights, setWeights] = useState<Weight[]>([])
   const [addVisible, setAddVisible] = useState<boolean>(false)
+  const [editVisible, setEditVisible] = useState<boolean>(false)
+  const [editItem, setEditItem ] = useState<number>(-1)
 
   useEffect(() => {
     fetchWeights(user!.uid)
@@ -39,6 +42,16 @@ export default function WeightScreen() {
   function handleCloseAddModal() {
     setAddVisible(false)
   }
+
+  function handleCloseEditModal() {
+    setEditItem(-1)
+    setEditVisible(false)
+  }
+
+  function setItem(ind: number) {
+    setEditItem(ind)
+    setEditVisible(true)
+  }
   
   return (
     <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
@@ -46,8 +59,8 @@ export default function WeightScreen() {
 
       <FlatList
         data={weights}
-        renderItem={({item}) => (
-          <WeightListItem item={item} />
+        renderItem={({item, index}) => (
+          <WeightListItem item={item} index={index} setItem={setItem} />
         )} 
         keyExtractor={item => item.id}
         extraData={weights}
@@ -56,7 +69,11 @@ export default function WeightScreen() {
         ListEmptyComponent={<Text>You haven't recorded your weight yet. Click the plus button in the bottom right to get started!</Text>}
       />
 
-      <AddWeightModal visible={addVisible} closeFunc={handleCloseAddModal}/>
+      <AddWeightModal visible={addVisible} closeFunc={handleCloseAddModal} />
+      { editItem >= 0 
+        ? <EditWeightModal visible={editVisible} closeFunc={handleCloseEditModal} item={weights[editItem]} />
+        : null
+      }
 
       <FAB
         visible

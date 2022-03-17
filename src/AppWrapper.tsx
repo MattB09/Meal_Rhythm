@@ -21,7 +21,6 @@ export default function AppWrapper() {
       handleAuthChange(user)
       console.log("Auth changed.. useEffect inside callback", user?.email)
     })
-    console.log("useEffect", user?.email)
 
     return () => {
       unsub()

@@ -17,10 +17,11 @@ export interface WeightStore {
   fetchingWeight: boolean;
   setWeights: Action<WeightStore, Weight[]>;
   addWeight: Action<WeightStore, Weight>;
+  editWeight: Action<WeightStore, Weight>
   setWeightError: Action<WeightStore, null|string>;
   setFetching: Action<WeightStore, boolean>;
   fetchWeights: Thunk<WeightStore, string>;
-  saveWeight: Thunk<WeightStore, {weight: Weight, uid: string}>
+  saveWeight: Thunk<WeightStore, {weight: Weight, uid: string, type: 'save'|'edit'}>
 }
 
 export const weight: WeightStore = {
@@ -34,11 +35,15 @@ export const weight: WeightStore = {
   }),
   addWeight: action((state, payload) => {
     state.weightList.unshift(payload)
-    // state.weightList.sort((a, b) => {
-    //   if (a.date < b.date) return 1
-    //   if (a.date > b.date) return -1
-    //   return 0
-    // })
+  }),
+  editWeight: action((state, payload) => {
+    const index = state.weightList.findIndex((item) => item.id === payload.id)
+    state.weightList[index] = payload
+    state.weightList.sort((a, b) => {
+      if (a.date < b.date) return 1
+      if (a.date > b.date) return -1
+      return 0
+    })
   }),
   setWeightError: action((state, payload) => {
     state.weightError = payload;
@@ -74,9 +79,10 @@ export const weight: WeightStore = {
   saveWeight: thunk(async (actions, payload) => {
     try {
       await setDoc(doc(firestore, `users/${payload.uid}/weights`, payload.weight.id), payload.weight)
-      actions.addWeight(payload.weight)
+      if (payload.type == 'save') actions.addWeight(payload.weight)
+      else if (payload.type == 'edit') actions.editWeight(payload.weight)
     } catch (err: any) {
       console.log(err)
     }
-  })
+  }),
 }
