@@ -4,8 +4,6 @@ import { View, KeyboardAvoidingView, Platform, Modal, TouchableWithoutFeedback, 
 
 
 import { useStoreActions, useStoreState } from '../../store';
-import type { Weight } from '../../store/weight';
-
 
 
 export default function AddWeightModal({visible, closeFunc}:any) {
