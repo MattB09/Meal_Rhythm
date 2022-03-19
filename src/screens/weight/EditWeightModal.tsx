@@ -15,6 +15,7 @@ type editWeightModalProps = {
 export default function EditWeightModal({visible, closeFunc, item}:editWeightModalProps) {
   const user = useStoreState((state) => state.auth.user)
   const saveWeight = useStoreActions((actions) => actions.weight.saveWeight)
+  const deleteWeight = useStoreActions((actions) => actions.weight.deleteWeight)
 
   const { theme } = useTheme();
 
@@ -51,13 +52,17 @@ export default function EditWeightModal({visible, closeFunc, item}:editWeightMod
     handleClose()
   }
 
+  function handleDeleteWeight() {
+    deleteWeight({uid: user!.uid, weightId: item.id})
+    handleClose()
+  }
+
   function handleClose() {
     setWeight("")
     setWeightError("")
     setNote("")
     closeFunc()
   }
-
 
   return (
   <Modal
@@ -101,6 +106,14 @@ export default function EditWeightModal({visible, closeFunc, item}:editWeightMod
             title="Save"
             titleStyle={{color: theme.colors?.black}}
             onPress={handleSaveWeight}
+            disabled={weightError.length > 0}
+          />
+          <Button
+            containerStyle={{ marginVertical: 8 }}
+            buttonStyle={{ backgroundColor: theme.colors?.error }}
+            title="Delete"
+            titleStyle={{color: theme.colors?.black}}
+            onPress={handleDeleteWeight}
             disabled={weightError.length > 0}
           />
           <Button

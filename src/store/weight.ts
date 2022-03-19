@@ -1,6 +1,8 @@
 import { action, thunk } from 'easy-peasy'
 import type { Action, Thunk } from 'easy-peasy'
-import {  query, collection, getDocs, orderBy, setDoc, doc } from 'firebase/firestore'
+import {  
+  query, collection, getDocs, orderBy, setDoc, doc, deleteDoc 
+} from 'firebase/firestore'
 
 import { firestore } from '../firebase';
 
@@ -18,10 +20,12 @@ export interface WeightStore {
   setWeights: Action<WeightStore, Weight[]>;
   addWeight: Action<WeightStore, Weight>;
   editWeight: Action<WeightStore, Weight>
+  deleteWeightLocal: Action<WeightStore, string>
   setWeightError: Action<WeightStore, null|string>;
   setFetching: Action<WeightStore, boolean>;
   fetchWeights: Thunk<WeightStore, string>;
   saveWeight: Thunk<WeightStore, {weight: Weight, uid: string, type: 'save'|'edit'}>
+  deleteWeight: Thunk<WeightStore, {weightId: string, uid: string}>
 }
 
 export const weight: WeightStore = {
@@ -44,6 +48,10 @@ export const weight: WeightStore = {
       if (a.date > b.date) return -1
       return 0
     })
+  }),
+  deleteWeightLocal: action((state, payload) => {
+    const index = state.weightList.findIndex((item) => item.id === payload)
+    state.weightList.splice(index, 1)
   }),
   setWeightError: action((state, payload) => {
     state.weightError = payload;
@@ -85,4 +93,12 @@ export const weight: WeightStore = {
       console.log(err)
     }
   }),
+  deleteWeight: thunk(async (actions, payload) => {
+    try {
+      await deleteDoc(doc(firestore, `users/${payload.uid}/weights`, payload.weightId))
+      actions.deleteWeightLocal(payload.weightId)
+    } catch (err: any) {
+      console.log(err)
+    }
+  })
 }
