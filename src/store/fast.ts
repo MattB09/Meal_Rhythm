@@ -13,7 +13,7 @@ export type Fast = {
     endTime: Date,
     elapsedSeconds: number,
     feeling: null|number,
-    note: string
+    note: null|string
 }
 
 
