@@ -27,6 +27,7 @@ export interface FastStore {
     deleteFastLocal: Action<FastStore, string>
     setFastError: Action<FastStore, null|string>
     setFetching: Action<FastStore, boolean>
+    fetchFasts: Thunk<FastStore, string>
     saveFast: Thunk<FastStore, {fast: Fast, uid: string, type: 'save'|'edit'}>
     deleteFast: Thunk<FastStore, {fastId: string, uid: string}>
 }
@@ -62,6 +63,32 @@ export const fast: FastStore = {
   }),
   setFetching: action((state, payload) => {
     state.fetchingFast = payload;
+  }),
+  // thunks
+  fetchFasts: thunk(async (actions, payload) => {
+    try {
+      actions.setFetching(true);
+      actions.setFastError(null);
+      const q = query(collection(firestore, `users/${payload}/fasts/`), orderBy("startTime", "desc"));
+      const qSnapshot = await getDocs(q);
+      const mapped = qSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        const docObj = {
+          id: data.id,
+          startTime: data.startTime.toDate(),
+          endTime: data.endTime.toDate(),
+          elapsedSeconds: data.elapsedSeconds,
+          feeling: data.feeling,
+          note: data.note
+        };
+        return docObj
+      })
+      actions.setFasts(mapped)
+    } catch (err: any) {
+      actions.setFastError(<string>err!.code);
+    } finally {
+      actions.setFetching(false);
+    }
   }),
   saveFast: thunk(async (actions, payload) => {
     try {

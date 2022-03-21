@@ -100,7 +100,7 @@ export default function Progress({start, target}: ProgressProps) {
           verticalAnchor="middle"
           x={screenWidth/2} y={(screenHeight/4) -15}
           style={{fill: theme.colors?.black, fontSize: 40}}
-          text={displayElapsed(elapsedSeconds)}
+          text={elapsedSeconds ? displayElapsed(elapsedSeconds) : displayElapsed(0)}
         />
       </Svg>
     </View>

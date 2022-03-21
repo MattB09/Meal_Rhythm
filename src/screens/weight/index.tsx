@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Text, FAB, useTheme, Overlay, Input, Button, ButtonGroup } from 'react-native-elements';
+import { Text, FAB, useTheme } from 'react-native-elements';
 import { View, FlatList } from 'react-native';
 
 import { useStoreActions, useStoreState } from '../../store';
 import WeightListItem from './WeightListItem';
-import { weight, Weight } from '../../store/weight';
+import type { Weight } from '../../store/weight';
 import AddWeightModal from './AddWeightModal';
 import EditWeightModal from './EditWeightModal'
 
