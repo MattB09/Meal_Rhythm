@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { Text, useTheme, Input, Button } from 'react-native-elements';
 import { View, KeyboardAvoidingView, Platform, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
-
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { useStoreActions, useStoreState } from '../../store';
 import type { Weight } from '../../store/weight';
+
 
 type editWeightModalProps = {
   visible: boolean,
   closeFunc: () => void, 
   item: Weight
 }
+
 
 export default function EditWeightModal({visible, closeFunc, item}:editWeightModalProps) {
   const user = useStoreState((state) => state.auth.user)
@@ -80,7 +82,17 @@ export default function EditWeightModal({visible, closeFunc, item}:editWeightMod
         accessible={false}
       >
         <View style={{ width: '90%', backgroundColor: theme.colors?.primary, padding: 16, borderRadius:30 }}>
-          <Text h3 style={{color: theme.colors?.black, textAlign: 'center', marginBottom: 8}}>Edit</Text>
+
+          <View style={{width: "100%", flexDirection: "row"}}>
+            <Icon name="close-circle-outline" size={30} color={theme.colors?.black} 
+              onPress={handleClose} 
+            />
+            <Text h3 style={{color: theme.colors?.black, textAlign: 'center', marginBottom: 8, flexGrow: 2}}>Edit</Text>
+            <Icon name="delete-circle-outline" size={30} color={theme.colors?.error} 
+              onPress={handleDeleteWeight} 
+            />
+          </View>
+
           <Input 
             style={{color: theme.colors?.black}}
             label="Weight (kg)"
@@ -108,21 +120,7 @@ export default function EditWeightModal({visible, closeFunc, item}:editWeightMod
             onPress={handleSaveWeight}
             disabled={weightError.length > 0}
           />
-          <Button
-            containerStyle={{ marginVertical: 8 }}
-            buttonStyle={{ backgroundColor: theme.colors?.error }}
-            title="Delete"
-            titleStyle={{color: theme.colors?.black}}
-            onPress={handleDeleteWeight}
-            disabled={weightError.length > 0}
-          />
-          <Button
-            containerStyle={{ marginVertical: 8 }}
-            buttonStyle={{ backgroundColor: theme.colors?.grey3 }}
-            title="Cancel"
-            titleStyle={{color: theme.colors?.black}}
-            onPress={handleClose}
-          />
+
         </View>
         </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

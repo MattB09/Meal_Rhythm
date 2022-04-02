@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Text, useTheme, Input, Button } from 'react-native-elements';
 import { View, KeyboardAvoidingView, Platform, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
-
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { useStoreActions, useStoreState } from '../../store';
 import type { Fast } from '../../store/fast';
@@ -38,7 +38,15 @@ export default function EditFastModal({visible, closeFunc, item}: editFastModalP
           accessible={false}
         >
           <View style={{ width: '90%', backgroundColor: theme.colors?.primary, padding: 16, borderRadius:30 }}>
-            <Text h3 style={{color: theme.colors?.black, textAlign: 'center', marginBottom: 8}}>Edit</Text>
+            <View style={{width: "100%", flexDirection: "row"}}>
+              <Icon name="close-circle-outline" size={30} color={theme.colors?.black} 
+                onPress={handleClose} 
+              />
+              <Text h3 style={{color: theme.colors?.black, textAlign: 'center', marginBottom: 8, flexGrow: 2}}>Edit</Text>
+              <Icon name="delete-circle-outline" size={30} color={theme.colors?.error} 
+                // onPress={handleDeleteWeight} 
+              />
+            </View>
 
             <Button
               containerStyle={{ marginVertical: 8 }}
@@ -47,21 +55,6 @@ export default function EditFastModal({visible, closeFunc, item}: editFastModalP
               titleStyle={{color: theme.colors?.black}}
               // onPress={handleSaveWeight}
               // disabled={weightError.length > 0}
-            />
-            <Button
-              containerStyle={{ marginVertical: 8 }}
-              buttonStyle={{ backgroundColor: theme.colors?.error }}
-              title="Delete"
-              titleStyle={{color: theme.colors?.black}}
-              // onPress={handleDeleteWeight}
-              // disabled={weightError.length > 0}
-            />
-            <Button
-              containerStyle={{ marginVertical: 8 }}
-              buttonStyle={{ backgroundColor: theme.colors?.grey3 }}
-              title="Cancel"
-              titleStyle={{color: theme.colors?.black}}
-              onPress={handleClose}
             />
           </View>
         </TouchableWithoutFeedback>
