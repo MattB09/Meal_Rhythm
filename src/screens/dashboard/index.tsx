@@ -5,6 +5,7 @@ import { View, FlatList } from 'react-native';
 import { useStoreActions, useStoreState } from '../../store';
 import { Fast } from '../../store/fast';
 import FastListItem from './FastListItem';
+import EditFastModal from './EditFastModal';
 
 
 export default function DashboardScreen() {
@@ -17,6 +18,8 @@ export default function DashboardScreen() {
   const { theme } = useTheme()
 
   const [fasts, setFasts] = useState<Fast[]>([]) 
+  const [editVisible, setEditVisible] = useState<boolean>(false)
+  const [editItem, setEditItem] = useState<number>(-1)
 
   useEffect(() => {
     handleRefresh()
@@ -34,6 +37,15 @@ export default function DashboardScreen() {
     signOut(null)
   }
 
+  function setItem(ind: number) {
+    setEditItem(ind)
+    setEditVisible(true)
+  }
+
+  function handleCloseEditModal() {
+    setEditItem(-1)
+    setEditVisible(false)
+  }
   
   return (
     <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
@@ -42,7 +54,7 @@ export default function DashboardScreen() {
       <FlatList
         data={fasts}
         renderItem={({item, index}) => (
-          <FastListItem item={item} index={index} />
+          <FastListItem item={item} index={index} setItem={setItem} />
         )} 
         keyExtractor={item => item.id}
         extraData={fasts}
@@ -50,6 +62,11 @@ export default function DashboardScreen() {
         refreshing={fetching}
         ListEmptyComponent={<Text>You haven't recorded your weight yet. Click the plus button in the bottom right to get started!</Text>}
       />
+
+      { editItem >= 0 
+        ? <EditFastModal visible={editVisible} closeFunc={handleCloseEditModal} item={fasts[editItem]} />
+        : null
+      }
 
       <Button 
         title="Sign Out"

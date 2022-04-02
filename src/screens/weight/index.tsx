@@ -15,7 +15,6 @@ export default function WeightScreen() {
   const fetching = useStoreState((state) => state.weight.fetchingWeight)
   const fetchWeights = useStoreActions((actions) => actions.weight.fetchWeights)
 
-
   const { theme } = useTheme();
 
   const [weights, setWeights] = useState<Weight[]>([])

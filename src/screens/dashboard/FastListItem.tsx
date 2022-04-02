@@ -8,11 +8,11 @@ import { displayTime, displayElapsed } from '../../helpers/timeHelpers'
 type FastListItemProps = {
   item: Fast,
   index: number,
-  // setItem: (ind:number) => void,
+  setItem: (ind:number) => void,
 }
 
 
-export default function WeightListItem({item, index}:FastListItemProps) {
+export default function WeightListItem({item, index, setItem}:FastListItemProps) {
   const { theme } = useTheme();
 
   return (
@@ -24,7 +24,7 @@ export default function WeightListItem({item, index}:FastListItemProps) {
         <ListItem.Subtitle>End: { displayTime(item.endTime) }</ListItem.Subtitle>
         { item.note && <ListItem.Subtitle><Text>{item.note}</Text></ListItem.Subtitle>}
       </ListItem.Content>
-      <Icon name="pencil-circle" size={30} color={theme.colors?.grey2} />
+      <Icon name="pencil-circle" size={30} color={theme.colors?.grey2} onPress={() => setItem(index)}/>
     </ListItem>
   )
 }
