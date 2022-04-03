@@ -17,7 +17,7 @@ export default function TimerScreen() {
   const { theme } = useTheme()
 
   const [start, setStart] = useState<Date|null>(null)
-  const [end, setEnd] = useState<Date|null>()
+  const [end, setEnd] = useState<Date|null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [dpVisible, setDpVisible] = useState<boolean>(false)
   const [dpMode, setDpMode] = useState<string>('start')
