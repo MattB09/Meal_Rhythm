@@ -21,7 +21,7 @@ export default function TimerScreen() {
   const [loading, setLoading] = useState<boolean>(true)
   const [dpVisible, setDpVisible] = useState<boolean>(false)
   const [dpMode, setDpMode] = useState<string>('start')
-  // const [stopVisible, setStopVisible] = useState<boolean>(false)
+  const [stopVisible, setStopVisible] = useState<boolean>(false)
 
   useEffect(() => {
     checkExistingStart()
@@ -117,8 +117,8 @@ export default function TimerScreen() {
           mode="datetime"
           onConfirm={handleStartChanged}
           onCancel={() => setDpVisible(false)}
-          // date={dpMode == 'start' ? start! : end!}
-          date={start!}
+          date={dpMode == 'start' ? start! : end!}
+          onHide={() => setDpVisible(false)}
         />
 
         {/* <StopFastModal 
@@ -175,6 +175,7 @@ export default function TimerScreen() {
                 title="Stop fasting"
                 titleStyle={{color: theme.colors?.black}}
                 // onPress={() => setStopVisible(true)}
+                onPress={handleEndFast}
               />
             </>
           }

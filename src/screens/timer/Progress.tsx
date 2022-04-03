@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, Dimensions } from 'react-native';
 import { Text, useTheme } from 'react-native-elements'
-import { VictoryPie, VictoryAnimation, VictoryLabel } from 'victory-native';
+import { VictoryPie, VictoryLabel } from 'victory-native';
 import { Svg } from 'react-native-svg'
 
 import { displayElapsed, calculateElapsedSeconds } from '../../helpers/timeHelpers'
@@ -51,6 +51,10 @@ export default function Progress({start, target}: ProgressProps) {
       }, 1000)
     } else {
       setElapsedSeconds(0)
+      setData([
+        {x: 1, y: 0},
+        {x: 2, y: 100}
+      ])
       if (!id) return
       clearInterval(id)
     }
