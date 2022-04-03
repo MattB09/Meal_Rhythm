@@ -38,7 +38,10 @@ export default function TimerScreen() {
   async function checkExistingStart() {
     try {
       let existing: string|null = await AS.getItem(`start_${user!.uid}`)
-      if (!existing || existing == null) return
+      if (!existing || existing == null) {
+        setStart(null)
+        return
+      }
 
       let existingDate: Date = new Date(existing)
       setStart(existingDate)
@@ -72,11 +75,11 @@ export default function TimerScreen() {
     saveStart(null)
   }
 
-  function handleShowDpModal(mode='start') {
-    console.log('clicked', mode, dpMode, dpVisible)
-    setDpMode(mode)
-    setDpVisible(true)
-  }
+  // function handleShowDpModal(mode='start') {
+  //   console.log('clicked', mode, dpMode, dpVisible)
+  //   setDpMode(mode)
+  //   setDpVisible(true)
+  // }
 
   function handleStartChanged(newStart: Date) {
     handleStartFast(newStart)
@@ -133,7 +136,7 @@ export default function TimerScreen() {
 
           <Progress start={start} target={18} />
 
-          { !start
+          { !start || !end
             ? <Button
               containerStyle={{ marginVertical: 8, width: "90%" }}
               buttonStyle={{ backgroundColor: theme.colors?.primary }}
@@ -164,7 +167,7 @@ export default function TimerScreen() {
 
                 <View style={{ alignItems: 'center'}}>
                   <Text>End</Text>
-                  <Text>{displayTime(end!)}</Text>
+                  <Text>{displayTime(end)}</Text>
                 </View>
 
               </View>
