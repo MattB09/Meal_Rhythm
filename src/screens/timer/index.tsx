@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { useTheme, Text, LinearProgress, Button, Badge } from 'react-native-elements';
 import { ScrollView, View } from 'react-native'
 import { default as AS } from '@react-native-async-storage/async-storage';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import { useStoreState, useStoreActions } from '../../store';
 import Progress from './Progress';
 import { calculateElapsedSeconds, displayTime, calculateTargetEndTime } from '../../helpers/timeHelpers';
-import { action } from 'easy-peasy';
+// import StopFastModal from './StopFastModal';
 
 
 export default function TimerScreen() {
@@ -18,10 +19,21 @@ export default function TimerScreen() {
   const [start, setStart] = useState<Date|null>(null)
   const [end, setEnd] = useState<Date|null>()
   const [loading, setLoading] = useState<boolean>(true)
+  const [dpVisible, setDpVisible] = useState<boolean>(false)
+  const [dpMode, setDpMode] = useState<string>('start')
+  // const [stopVisible, setStopVisible] = useState<boolean>(false)
 
   useEffect(() => {
     checkExistingStart()
   }, [])
+
+  useEffect(() => {
+    if (start) {
+      setEnd(calculateTargetEndTime(start, 18))
+    } else {
+      setEnd(null)
+    }
+  }, [start])
 
   async function checkExistingStart() {
     try {
@@ -30,7 +42,6 @@ export default function TimerScreen() {
 
       let existingDate: Date = new Date(existing)
       setStart(existingDate)
-      setEnd(calculateTargetEndTime(existingDate, 18))
     } catch (e) {
       console.log(e)
     } finally {
@@ -38,9 +49,8 @@ export default function TimerScreen() {
     }
   }
 
-  function handleStartFast() {
+  function handleStartFast(d=new Date()) {
     // set the start time and save in local storage
-    const d: Date = new Date();
     setStart(d)
     saveStart(d)
   }
@@ -60,6 +70,17 @@ export default function TimerScreen() {
     saveFast(endTime, elapsedSeconds)
     setStart(null)
     saveStart(null)
+  }
+
+  function handleShowDpModal(mode='start') {
+    console.log('clicked', mode, dpMode, dpVisible)
+    setDpMode(mode)
+    setDpVisible(true)
+  }
+
+  function handleStartChanged(newStart: Date) {
+    handleStartFast(newStart)
+    setDpVisible(false)
   }
 
   async function saveFast(endTime: Date, elapsedSeconds: number): Promise<void> {
@@ -90,6 +111,23 @@ export default function TimerScreen() {
       <View style={{flex: 1}}>
 
         <Text h1 style={{textAlign: 'center'}}>Timer</Text>
+        
+        <DateTimePickerModal 
+          isVisible={dpVisible}
+          mode="datetime"
+          onConfirm={handleStartChanged}
+          onCancel={() => setDpVisible(false)}
+          // date={dpMode == 'start' ? start! : end!}
+          date={start!}
+        />
+
+        {/* <StopFastModal 
+          visible={stopVisible} 
+          closeFunc={() => setStopVisible(false)}
+          saveFunc={() => null}
+          deleteFunc={() => null}
+          openDP={() => handleShowDpModal()}
+        /> */}
 
         <ScrollView style={{flex: 1}} contentContainerStyle={{alignItems: 'center', paddingHorizontal: 8, paddingBottom: 24}}>
 
@@ -101,12 +139,12 @@ export default function TimerScreen() {
               buttonStyle={{ backgroundColor: theme.colors?.primary }}
               title="Begin fasting"
               titleStyle={{color: theme.colors?.black}}
-              onPress={handleStartFast}
+              onPress={() => handleStartFast()}
             />
           : <>
               <Badge
                 badgeStyle={{backgroundColor: theme.colors?.grey2, paddingVertical: 4, paddingHorizontal: 16, height: 'auto', borderColor: theme.colors?.grey2, borderRadius: 30}}
-                containerStyle={{ marginBottom: 32,}}
+                containerStyle={{ marginTop: 0, marginBottom: 32,}}
                 value="18 hour fast"
                 textStyle={{ fontSize: 20 }}
               />
@@ -120,6 +158,7 @@ export default function TimerScreen() {
                     buttonStyle={{ backgroundColor: theme.colors?.grey2}}
                     title="Edit"
                     titleStyle={{fontSize: 12}}
+                    onPress={() => setDpVisible(true)}
                   />
                 </View>
 
@@ -135,7 +174,7 @@ export default function TimerScreen() {
                 buttonStyle={{ backgroundColor: theme.colors?.primary }}
                 title="Stop fasting"
                 titleStyle={{color: theme.colors?.black}}
-                onPress={handleEndFast}
+                // onPress={() => setStopVisible(true)}
               />
             </>
           }

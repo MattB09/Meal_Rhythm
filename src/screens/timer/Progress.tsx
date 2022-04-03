@@ -62,7 +62,7 @@ export default function Progress({start, target}: ProgressProps) {
   }, [start, target])
 
   return (
-    <View style={{width: '100%', padding: 8, alignItems: 'center'}}>
+    <View style={{width: '100%', padding: 8, alignItems: 'center', paddingBottom: 0}}>
       <Svg
         height={screenHeight / 2}
         width={screenWidth}

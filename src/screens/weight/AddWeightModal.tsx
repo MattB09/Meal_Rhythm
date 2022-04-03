@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Text, useTheme, Input, Button } from 'react-native-elements';
 import { View, KeyboardAvoidingView, Platform, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
-
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { useStoreActions, useStoreState } from '../../store';
 
@@ -70,7 +70,12 @@ export default function AddWeightModal({visible, closeFunc}:any) {
         accessible={false}
       >
         <View style={{ width: '90%', backgroundColor: theme.colors?.primary, padding: 16, borderRadius:30 }}>
-          <Text h3 style={{color: theme.colors?.black, textAlign: 'center', marginBottom: 8}}>Log your weight</Text>
+          <View style={{width: "100%", flexDirection: "row"}}>
+            <Icon name="close-circle-outline" size={30} color={theme.colors?.black} 
+              onPress={handleClose} 
+            />
+            <Text h3 style={{color: theme.colors?.black, textAlign: 'center', marginBottom: 8, flexGrow: 2}}>Edit</Text>
+          </View>
           <Input 
             style={{color: theme.colors?.black}}
             label="Weight (kg)"
@@ -96,15 +101,8 @@ export default function AddWeightModal({visible, closeFunc}:any) {
             onPress={handleSaveWeight}
             disabled={weightError.length > 0}
           />
-          <Button
-            containerStyle={{ marginVertical: 8 }}
-            buttonStyle={{ backgroundColor: theme.colors?.grey3 }}
-            title="Cancel"
-            titleStyle={{color: theme.colors?.black}}
-            onPress={handleClose}
-          />
         </View>
-        </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   </Modal>
 )}
