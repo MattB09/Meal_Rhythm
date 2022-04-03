@@ -51,3 +51,11 @@ export function lpad(num: number): string {
     else formatted = String(num)
     return formatted
 }
+
+export function calculateTargetEndTime(start: Date, targetDuration: number):Date {
+    const end = new Date(start)
+    end.setHours(start.getHours() + targetDuration)
+    end.setMinutes(start.getMinutes())
+    end.setSeconds(start.getSeconds())
+    return end
+}

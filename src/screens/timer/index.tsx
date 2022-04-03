@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useTheme, Text, LinearProgress, Button, Badge } from 'react-native-elements';
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { default as AS } from '@react-native-async-storage/async-storage';
 
 import { useStoreState, useStoreActions } from '../../store';
 import Progress from './Progress';
-import { calculateElapsedSeconds } from '../../helpers/timeHelpers';
+import { calculateElapsedSeconds, displayTime, calculateTargetEndTime } from '../../helpers/timeHelpers';
 import { action } from 'easy-peasy';
 
 
@@ -16,6 +16,7 @@ export default function TimerScreen() {
   const { theme } = useTheme()
 
   const [start, setStart] = useState<Date|null>(null)
+  const [end, setEnd] = useState<Date|null>()
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function TimerScreen() {
 
       let existingDate: Date = new Date(existing)
       setStart(existingDate)
+      setEnd(calculateTargetEndTime(existingDate, 18))
     } catch (e) {
       console.log(e)
     } finally {
@@ -85,37 +87,60 @@ export default function TimerScreen() {
     return (<LinearProgress style={{marginHorizontal: 16, height: 24, width: "90%"}}/>)
   } else {
     return (
-      <View style={{flex: 1, alignItems: 'center', paddingHorizontal: 8}}>
+      <View style={{flex: 1}}>
 
         <Text h1 style={{textAlign: 'center'}}>Timer</Text>
 
-        <Progress start={start} target={18} />
+        <ScrollView style={{flex: 1}} contentContainerStyle={{alignItems: 'center', paddingHorizontal: 8, paddingBottom: 24}}>
 
-        { !start 
-          ? <Button
-            containerStyle={{ marginVertical: 8, width: "90%" }}
-            buttonStyle={{ backgroundColor: theme.colors?.primary }}
-            title="Begin fasting"
-            titleStyle={{color: theme.colors?.black}}
-            onPress={handleStartFast}
-          />
-        : <>
-            <Badge
-              badgeStyle={{backgroundColor: theme.colors?.grey2, paddingVertical: 4, paddingHorizontal: 16, height: 'auto', borderColor: theme.colors?.grey2, borderRadius: 30}}
-              containerStyle={{ marginBottom: 16,}}
-              value="18 hour fast"
-              textStyle={{ fontSize: 15 }}
-            />
-            <Button
+          <Progress start={start} target={18} />
+
+          { !start || !end
+            ? <Button
               containerStyle={{ marginVertical: 8, width: "90%" }}
               buttonStyle={{ backgroundColor: theme.colors?.primary }}
-              title="Stop fasting"
+              title="Begin fasting"
               titleStyle={{color: theme.colors?.black}}
-              onPress={handleEndFast}
+              onPress={handleStartFast}
             />
-          </>
-        }
+          : <>
+              <Badge
+                badgeStyle={{backgroundColor: theme.colors?.grey2, paddingVertical: 4, paddingHorizontal: 16, height: 'auto', borderColor: theme.colors?.grey2, borderRadius: 30}}
+                containerStyle={{ marginBottom: 32,}}
+                value="18 hour fast"
+                textStyle={{ fontSize: 20 }}
+              />
 
+              <View style={{width: "100%", flexDirection: "row", justifyContent: 'space-around', marginBottom: 24}}>
+                <View style={{ alignItems: 'center'}}>
+                  <Text>Start</Text>
+                  <Text>{displayTime(start)}</Text>
+                  <Button
+                    containerStyle={{ marginTop: 8, width: 64 }}
+                    buttonStyle={{ backgroundColor: theme.colors?.grey2}}
+                    title="Edit"
+                    titleStyle={{fontSize: 12}}
+                  />
+                </View>
+
+                <View style={{ alignItems: 'center'}}>
+                  <Text>End</Text>
+                  <Text>{displayTime(end)}</Text>
+                </View>
+
+              </View>
+
+              <Button
+                containerStyle={{ width: "90%" }}
+                buttonStyle={{ backgroundColor: theme.colors?.primary }}
+                title="Stop fasting"
+                titleStyle={{color: theme.colors?.black}}
+                onPress={handleEndFast}
+              />
+            </>
+          }
+
+        </ScrollView>
       </View>
     )
   }
