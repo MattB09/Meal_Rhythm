@@ -133,7 +133,7 @@ export default function TimerScreen() {
 
           <Progress start={start} target={18} />
 
-          { !start || !end
+          { !start
             ? <Button
               containerStyle={{ marginVertical: 8, width: "90%" }}
               buttonStyle={{ backgroundColor: theme.colors?.primary }}
@@ -164,7 +164,7 @@ export default function TimerScreen() {
 
                 <View style={{ alignItems: 'center'}}>
                   <Text>End</Text>
-                  <Text>{displayTime(end)}</Text>
+                  <Text>{displayTime(end!)}</Text>
                 </View>
 
               </View>
