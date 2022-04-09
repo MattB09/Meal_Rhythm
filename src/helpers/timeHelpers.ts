@@ -59,3 +59,9 @@ export function calculateTargetEndTime(start: Date, targetDuration: number):Date
     end.setSeconds(start.getSeconds())
     return end
 }
+
+export function dateIsInPast(date: Date) {
+    const now = new Date()
+    if (date < now) return true
+    return false
+}

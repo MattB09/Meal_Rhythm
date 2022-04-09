@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTheme, Text, LinearProgress, Button, Badge } from 'react-native-elements';
 import { ScrollView, View } from 'react-native'
 import { default as AS } from '@react-native-async-storage/async-storage';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Toast from 'react-native-root-toast';
 
 import { useStoreState, useStoreActions } from '../../store';
 import Progress from './Progress';
-import { calculateElapsedSeconds, displayTime, calculateTargetEndTime } from '../../helpers/timeHelpers';
+import { calculateElapsedSeconds, displayTime, calculateTargetEndTime, dateIsInPast } from '../../helpers/timeHelpers';
 // import StopFastModal from './StopFastModal';
 
 
@@ -38,7 +39,7 @@ export default function TimerScreen() {
   async function checkExistingStart() {
     try {
       let existing: string|null = await AS.getItem(`start_${user!.uid}`)
-      if (!existing || existing == null) {
+      if (!existing || existing == 'null') {
         setStart(null)
         return
       }
@@ -82,6 +83,15 @@ export default function TimerScreen() {
   // }
 
   function handleStartChanged(newStart: Date) {
+    if (!dateIsInPast(newStart)) {
+      Toast.show('Start date cannot be in the future...', {
+        duration: Toast.durations.SHORT,
+        position: 300,
+        'backgroundColor': 'red'
+      })
+      console.log("should have toasted...")
+      return
+    }
     handleStartFast(newStart)
     setDpVisible(false)
   }
@@ -120,7 +130,7 @@ export default function TimerScreen() {
           mode="datetime"
           onConfirm={handleStartChanged}
           onCancel={() => setDpVisible(false)}
-          date={dpMode == 'start' ? start! : end!}
+          date={start!}
           onHide={() => setDpVisible(false)}
         />
 
