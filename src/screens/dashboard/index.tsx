@@ -49,8 +49,8 @@ export default function DashboardScreen() {
   
   return (
     <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
-      <Text h1 style={{textAlign: 'center', marginBottom: 16}}>Weight</Text>
-
+      <Text h1 style={{textAlign: 'center', marginBottom: 16}}>Dashboard</Text>
+      <Text h3 style={{textAlign: 'left', paddingLeft: 8, marginBottom: 8}}>Fasts</Text>
       <FlatList
         data={fasts}
         renderItem={({item, index}) => (
