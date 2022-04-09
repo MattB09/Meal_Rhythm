@@ -38,7 +38,7 @@ export default function Progress({start, target}: ProgressProps) {
 
       id = setInterval(() => {
         setElapsedSeconds((prev) => {
-          if (prev % 60 === 0) {
+          if (prev % 3 === 0) {
             return calculateElapsedSeconds(start)
           }
           let percent = (prev / (target * 3600) * 100)
