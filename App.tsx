@@ -3,6 +3,7 @@ import { StyleSheet, useColorScheme } from 'react-native';
 import { ThemeProvider } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StoreProvider } from 'easy-peasy';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { customLight, customDark } from './src/themes';
 import { store } from './src/store';
@@ -16,7 +17,9 @@ export default function App() {
     <ThemeProvider theme={themeName === 'dark' ? customDark : customLight} useDark={themeName === 'dark'}>
       <SafeAreaProvider>
         <StoreProvider store={store}>
-          <AppWrapper />
+          <RootSiblingParent>
+            <AppWrapper />
+          </RootSiblingParent>
         </StoreProvider>
       </SafeAreaProvider>
     </ThemeProvider>
