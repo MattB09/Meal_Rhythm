@@ -29,6 +29,11 @@ export const displayTime = (datetime: Date):string => {
     return dayStr 
 }
 
+export const displayTimeFromStr = (dtStr: string):string => {
+    let dt = new Date(dtStr)
+    return displayTime(dt)
+} 
+
 export const displayElapsed = (seconds: number):string => {
     if (seconds == 0) return "00:00:00"
 

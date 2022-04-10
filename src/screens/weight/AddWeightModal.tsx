@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { Text, useTheme, Input, Button } from 'react-native-elements';
 import { View, KeyboardAvoidingView, Platform, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Toast from 'react-native-root-toast';
 
 import { useStoreActions, useStoreState } from '../../store';
+import { dateIsInPast, displayTimeFromStr } from '../../helpers/timeHelpers'
 
 
 export default function AddWeightModal({visible, closeFunc}:any) {
@@ -14,6 +17,8 @@ export default function AddWeightModal({visible, closeFunc}:any) {
 
   const [weight, setWeight] = useState<string>("")
   const [weightError, setWeightError] = useState<string>("")
+  const [date, setDate] = useState<string>(new Date().toLocaleString())
+  const [DTPickerVisible, setDTPickerVisible] = useState<boolean>(false)
   const [note, setNote] = useState<string>("")
 
   function handleUpdateWeight(text: string) {
@@ -32,7 +37,7 @@ export default function AddWeightModal({visible, closeFunc}:any) {
   function handleSaveWeight() {
     if (weight === "" || weightError) return
     let actualNote = (note === "") ? null : note
-    let d = new Date()
+    let d = new Date(date)
     saveWeight({
       uid: user!.uid, 
       weight: {
@@ -50,7 +55,21 @@ export default function AddWeightModal({visible, closeFunc}:any) {
     setWeight("")
     setWeightError("")
     setNote("")
+    setDate(new Date().toLocaleString())
     closeFunc()
+  }
+
+  function handleChangeDate(newDate: Date) {
+    if (!dateIsInPast(newDate)) {
+      Toast.show('Start date cannot be in the future...', {
+        duration: Toast.durations.SHORT,
+        position: 100,
+        'backgroundColor': 'red'
+      })
+      return
+    }
+    setDate(newDate.toLocaleString())
+    setDTPickerVisible(false)
   }
 
 
@@ -74,8 +93,23 @@ export default function AddWeightModal({visible, closeFunc}:any) {
             <Icon name="close-circle-outline" size={30} color={theme.colors?.black} 
               onPress={handleClose} 
             />
-            <Text h3 style={{color: theme.colors?.black, textAlign: 'center', marginBottom: 8, flexGrow: 2}}>Edit</Text>
+            <Text h3 style={{color: theme.colors?.black, textAlign: 'center', marginBottom: 8, flexGrow: 2}}>Add Weight</Text>
           </View>
+
+          <View style={{width: "100%", paddingHorizontal: 10, marginTop: 0, paddingTop: 0}}>
+            <Text style={{color: theme.colors?.grey1, fontWeight: 'bold', fontSize:16, marginTop: 0, paddingTop: 0}}>Date</Text>
+            <View style={{width: "100%", flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8}}>
+              <Text>{displayTimeFromStr(date)}</Text>
+              <Button 
+                containerStyle={{ width: 100 }}
+                buttonStyle={{ backgroundColor: theme.colors?.grey2 }}
+                titleStyle={{fontSize: 12}}
+                title="Change Date"
+                onPress={() => setDTPickerVisible(true)}
+              />
+            </View>
+          </View>
+          
           <Input 
             style={{color: theme.colors?.black}}
             label="Weight (kg)"
@@ -89,10 +123,9 @@ export default function AddWeightModal({visible, closeFunc}:any) {
             label="Note"
             labelStyle={{color:theme.colors?.grey1}}
             multiline
-            numberOfLines={2}
             onChangeText={(text) => setNote(text)}
           />
-          
+
           <Button
             containerStyle={{ marginVertical: 8 }}
             buttonStyle={{ backgroundColor: theme.colors?.secondary }}
@@ -104,5 +137,13 @@ export default function AddWeightModal({visible, closeFunc}:any) {
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
+
+    <DateTimePickerModal 
+      isVisible={DTPickerVisible}
+      mode="datetime"
+      onConfirm={handleChangeDate}
+      onCancel={() => setDTPickerVisible(false)}
+      date={new Date(date)}
+    />
   </Modal>
 )}
