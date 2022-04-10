@@ -60,7 +60,7 @@ export default function DashboardScreen() {
         extraData={fasts}
         onRefresh={handleRefresh}
         refreshing={fetching}
-        ListEmptyComponent={<Text>You haven't recorded your weight yet. Click the plus button in the bottom right to get started!</Text>}
+        ListEmptyComponent={<Text>You haven't recorded any fasts yet. Head to the timer screen to get started!</Text>}
       />
 
       { editItem >= 0 
